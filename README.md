@@ -20,21 +20,25 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 欢迎合并提交来贡献！
 
 ## Features / 功能
-- [x] **Launch at Startup / 开机自启动**
-- [x] **Theme Mode: Indicator Area (default) / System  
-        主题模式：跟随指示器区域（默认） / 跟随系统**
-- [x] **Monitor Selection: Under Mouse (default) / Primary Monitor  
-        显示监视器：鼠标所在监视器（默认） / 主监视器**
-- [x] **Monitor Position: Center (default)  
-        监视器中的位置：居中显示（默认）**
+- **开机自启动   
+   Launch at Startup**
+
+- **指示器主题：跟随指示器区域（默认） / 跟随系统  
+   Theme Mode: Indicator Area (default) / System**
+
+- **显示所在的监视器：鼠标下的监视器（默认） / 主监视器  
+    Monitor Selection: Under Mouse (default) / Primary Monitor**
+
+- **指示器窗口位置：居中显示（默认）  
+    Indicator Window Position: Center (default)**
 ---
-- [x] **Customize Indicator Icon / 自定义指示器图标  
-        Place the specified icon in the software directory / 在软件目录中放入指定图标  
-        Default icon / 默认图标: `capslock.png`  
-        Theme icon / 主题图标: `capslock_dark.png` + `capslock_light.png`**
+- **自定义指示器图标  
+        Customize Indicator Icon**  
+        1. 在软件目录中放入指定名称的PNG图标   
+                Place the specified icon in the software directory   
+        2. 默认图标 / Default icon: `capslock.png`  
+        3. 主题图标 / Theme icon: `capslock_dark.png` + `capslock_light.png`
+
 ---
-- [x] **Higher Always-on-Top Priority When Run as Administrator  
-        以管理员权限启动时，窗口置顶优先级更高（可覆盖开始菜单）**
----
-- [ ] **Support NumLock, ScrollLock key indicator  
-        支持 NumLock、ScrollLock 键指示器**
+- **以管理员权限启动时，窗口置顶优先级更高（可覆盖开始菜单）   
+   Higher Always-on-Top Priority When Run as Administrator**
