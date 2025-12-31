@@ -21,6 +21,7 @@ ab_glyph = { version = "0.2.32", default-features = false, features = ["std"] }
 # 图像处理
 image = { version = "0.25.9", default-features = false, features = ["ico", "png"] }
 # 托盘
+tray-controls = "0.1.2"
 tray-icon = "0.21.2"
 # 注册表
 winreg = "0.55.0"

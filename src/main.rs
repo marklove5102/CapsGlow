@@ -33,7 +33,7 @@ use crate::{
     single_instance::SingleInstance,
     tray::{
         create_tray,
-        menu::{MenuManager, about, handler::MenuHandler},
+        menu::{MenuGroup, about, handler::MenuHandler},
     },
     uiaccess::prepare_uiaccess_token,
 };
@@ -41,6 +41,7 @@ use crate::{
 use anyhow::{Context, Result, anyhow};
 use log::error;
 use softbuffer::Surface;
+use tray_controls::MenuManager;
 use tray_icon::{TrayIcon, menu::MenuEvent};
 use windows::Win32::{Foundation::HWND, UI::Input::KeyboardAndMouse::GetKeyState};
 use winit::{
@@ -83,7 +84,7 @@ struct App {
     exit_threads: Arc<AtomicBool>,
     event_loop_proxy: EventLoopProxy<UserEvent>,
     custom_icon: Option<CustomIcon>,
-    menu_manager: Mutex<MenuManager>,
+    menu_manager: Mutex<MenuManager<MenuGroup>>,
     show_indicator: Arc<AtomicBool>,
     surface: Option<Surface<Rc<Window>, Rc<Window>>>,
     tray: Mutex<TrayIcon>,
@@ -96,7 +97,8 @@ impl App {
     fn new(event_loop_proxy: EventLoopProxy<UserEvent>) -> Self {
         let config = Config::open().expect("Failed to open config");
 
-        let (tray, menu_manager) = create_tray(&config).expect("Failed to create tray");
+        let mut menu_manager = MenuManager::new();
+        let tray = create_tray(&config, &mut menu_manager).expect("Failed to create tray");
 
         let custom_icon = CustomIcon::find_custom_icon();
 
@@ -296,18 +298,21 @@ impl ApplicationHandler<UserEvent> for App {
             }
             UserEvent::MenuEvent(event) => {
                 let mut menu_manager = self.menu_manager.lock().unwrap();
-                menu_manager.handler(event.id(), |is_normal_menu, check_menu| {
+                menu_manager.update(event.id(), |menu_control| {
+                    let Some(menu_control) = menu_control else {
+                        error!("Failed to get menu control");
+                        return;
+                    };
+
                     let menu_handlers = MenuHandler::new(
-                        event.id().clone(),
-                        is_normal_menu,
-                        check_menu,
+                        menu_control.clone(),
                         Arc::clone(&self.config),
                         self.event_loop_proxy.clone(),
                     );
 
-                    let _ = menu_handlers
-                        .run()
-                        .inspect_err(|e| error!("Failed to handle menu event: {e}"));
+                    if let Err(e) = menu_handlers.run() {
+                        error!("Failed to handle menu event: {e}")
+                    }
                 });
             }
             UserEvent::MoveWindow => {

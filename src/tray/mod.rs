@@ -3,17 +3,18 @@ pub mod menu;
 use crate::{
     config::Config,
     icon::load_icon_for_tray,
-    tray::menu::{MenuManager, item::create_menu},
+    tray::menu::{MenuGroup, item::create_menu},
 };
 
 use anyhow::{Result, anyhow};
+use tray_controls::MenuManager;
 use tray_icon::{TrayIcon, TrayIconBuilder};
 
 #[rustfmt::skip]
-pub fn create_tray(config: &Config) -> Result<(TrayIcon, MenuManager)> {
+pub fn create_tray(config: &Config, menu_manager: &mut MenuManager<MenuGroup>,) -> Result<TrayIcon> {
     let icon = load_icon_for_tray()?;
 
-    let (tray_menu, tray_check_menus) = create_menu(config).map_err(|e| anyhow!("Failed to create menu. - {e}"))?;
+    let tray_menu = create_menu(config, menu_manager).map_err(|e| anyhow!("Failed to create menu. - {e}"))?;
 
     let tray_icon = TrayIconBuilder::new()
         .with_menu_on_left_click(true)
@@ -23,5 +24,5 @@ pub fn create_tray(config: &Config) -> Result<(TrayIcon, MenuManager)> {
         .build()
         .map_err(|e| anyhow!("Failed to build tray - {e}"))?;
 
-    Ok((tray_icon, tray_check_menus))
+    Ok(tray_icon)
 }
